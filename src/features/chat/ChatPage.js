@@ -49,7 +49,7 @@ const ChatPage = props => (
       <Sider
         style={{
           theme: "light",
-          background: "#f2f3f5",
+          background: "#D3D3D3",
           width: 200,
           overflow: "auto",
           height: "100vh",

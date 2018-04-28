@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import ChatPage from "./features/chat/ChatPage";
+import LoginPage from "./features/login/LoginPage";
 import registerServiceWorker from "./registerServiceWorker";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
@@ -20,7 +21,7 @@ const store = createStore(
 
 ReactDOM.render(
   <Provider store={store}>
-    <ChatPage />
+    <LoginPage />
   </Provider>,
   document.getElementById("root")
 );

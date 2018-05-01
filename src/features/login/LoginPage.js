@@ -1,18 +1,21 @@
-import React from "react";
+import React, { Component } from "react";
+
 import { connect } from "react-redux";
-import { searchType, searchReq } from "./reducer";
+import { setFeild } from "./reducer";
 import { Layout, Menu, Icon, Button } from "antd";
 import { WrappedNormalLoginForm } from "./NormalLoginForm";
+import { WrappedNormalRegisterForm } from "./RegisterForm";
+
 import Background from "./stars.jpg";
 import logochat from "./logochat.png";
+
 const { Header, Sider } = Layout;
 
 const enhance = connect(
   state => ({
-    text: state.text,
-    result: state.result
+    loginPage: state.login
   }),
-  { searchType, searchReq }
+  { setFeild }
 );
 
 const LoginPage = props => (
@@ -28,7 +31,7 @@ const LoginPage = props => (
       src={logochat}
       style={{
         marginLeft: "-20px",
-        marginTop: "10%"
+        marginTop: "5%"
       }}
     />
     <div
@@ -36,15 +39,26 @@ const LoginPage = props => (
         backgroundColor: "white",
         padding: 50,
         width: "400px",
-        height: "270px",
+        height: "300px",
         marginLeft: "35%"
       }}
     >
-      <WrappedNormalLoginForm />
+      {props.loginPage && (
+        <WrappedNormalLoginForm
+          loginPage={props.loginPage}
+          setFeild={e => this.props.setFeild(e.key, e.value)}
+        />
+      )}
+      {!props.loginPage && (
+        <WrappedNormalRegisterForm
+          loginPage={props.loginPage}
+          setFeild={e => this.props.setFeild(e.key, e.value)}
+        />
+      )}
     </div>
     <div
       style={{
-        height: 220,
+        height: 260,
         bottom: 0
       }}
     />

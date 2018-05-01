@@ -1,24 +1,21 @@
 import axios from "axios";
 
-const SEARCH_TYPE = "SEARCH_TYPE";
+const SET_FEILD = "SET_FEILD";
 const SEARCH_REQ = "SEARCH_REQ";
 const SEARCH_REQ_PENDING = "SEARCH_REQ_PENDING";
 const SEARCH_REQ_FULFILLED = "SEARCH_REQ_FULFILLED";
 
 const initialState = {
-  text: "",
-  result: [],
-  loading: false
+  loginPage: false
 };
 
 let img = [];
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case SEARCH_TYPE:
+    case SET_FEILD:
       return {
-        ...state,
-        text: action.text
+        [action.key]: action.value
       };
     case SEARCH_REQ:
       return {
@@ -40,9 +37,10 @@ export default (state = initialState, action) => {
   }
 };
 
-export const searchType = text => ({
-  type: SEARCH_TYPE,
-  text
+export const setFeild = (key, value) => ({
+  type: SET_FEILD,
+  key,
+  value
 });
 
 export const searchReq = text => ({

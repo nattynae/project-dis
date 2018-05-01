@@ -6,22 +6,31 @@ import LoginPage from "./features/login/LoginPage";
 import registerServiceWorker from "./registerServiceWorker";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
-import { createStore, compose, applyMiddleware } from "redux";
-import reducers from "./features/chat/reducer";
+import { BrowserRouter } from "react-router-dom";
+import Routes from "./routes.js";
+import { createStore, compose, applyMiddleware, combineReducers } from "redux";
+import chatReducers from "./features/chat/reducer";
+import loginReducer from "./features/login/reducer";
 import promiseMiddleware from "redux-promise-middleware";
 import "antd/dist/antd.css";
 
-// 1 store มีหลาย reducer ได้ แต่ต้องไป รวมให้มาเป็น reducer อันใหญ่อันเดียวก่อนละค่อยใส่ลงไปใน createStore
+const rootReducer = combineReducers({
+  login: loginReducer,
+  chat: chatReducers
+});
+
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
-  reducers,
+  rootReducer,
   composeEnhancers(applyMiddleware(promiseMiddleware()))
 );
 
 ReactDOM.render(
   <Provider store={store}>
-    <LoginPage />
+    <BrowserRouter>
+      <Routes />
+    </BrowserRouter>
   </Provider>,
   document.getElementById("root")
 );

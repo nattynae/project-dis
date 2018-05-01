@@ -1,9 +1,21 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
-import { Form, Icon, Input, Button, Checkbox } from "antd";
+import { Form, Icon, Input, Button, Checkbox, message } from "antd";
+import { setFeild } from "./reducer";
 const FormItem = Form.Item;
 
-class NormalLoginForm extends React.Component {
+const success = () => {
+  message.success("Register Success !");
+};
+
+const error = () => {
+  message.error("Register Failed !");
+};
+
+class NormalRegisterForm extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -12,11 +24,12 @@ class NormalLoginForm extends React.Component {
       }
     });
   };
+
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form onSubmit={this.handleSubmit} className="login-form">
-        <h1 style={{ marginTop: -25 }}> Login </h1>
+        <h1 style={{ marginBottom: 30 }}> Sign up </h1>
         <FormItem>
           {getFieldDecorator("userName", {
             rules: [{ required: true, message: "Please input your username!" }]
@@ -43,15 +56,16 @@ class NormalLoginForm extends React.Component {
             type="primary"
             htmlType="submit"
             className="login-form-button"
+            onClick={success}
             style={{ marginRight: 20 }}
           >
-            Log in
+            Register
           </Button>
-          Or <a href="#">register now! </a>
+          Or <a href="#"> Back to Login! </a>
         </FormItem>
       </Form>
     );
   }
 }
 
-export const WrappedNormalLoginForm = Form.create()(NormalLoginForm);
+export const WrappedNormalRegisterForm = Form.create()(NormalRegisterForm);

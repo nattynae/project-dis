@@ -1,7 +1,21 @@
 import React from "react";
-import { Layout, Menu, Icon, Input, Button } from "antd";
-import { height } from "window-size";
+import { Layout, Menu, Icon, Input, Button, List, Avatar } from "antd";
 const { Content, Sider } = Layout;
+
+const data = [
+  {
+    title: "Ant Design Title 1"
+  },
+  {
+    title: "Ant Design Title 2"
+  },
+  {
+    title: "Ant Design Title 3"
+  },
+  {
+    title: "Ant Design Title 4"
+  }
+];
 
 export default props => (
   <Layout style={{ padding: "0" }}>
@@ -19,20 +33,10 @@ export default props => (
             padding: "15px 0px 0px 15px"
           }}
         >
-          Nav 1
+          {props.groupName}
         </h3>
       </div>
-      <Content
-        style={{
-          overflow: "initial",
-          background: "#fff",
-          padding: 24,
-          margin: 0,
-          minHeight: 280
-        }}
-      >
-        Content
-      </Content>
+
       <div
         style={{
           position: "fixed",
@@ -40,6 +44,33 @@ export default props => (
           marginLeft: 200
         }}
       >
+        <List
+          style={{
+            marginLeft: 50,
+            marginRight: 50
+          }}
+          itemLayout="horizontal"
+          dataSource={data}
+          renderItem={item => (
+            <List.Item>
+              <List.Item.Meta
+                avatar={
+                  <Avatar
+                    style={{
+                      backgroundColor: "#f56a00",
+                      verticalAlign: "middle"
+                    }}
+                    size="large"
+                  >
+                    Name
+                  </Avatar>
+                }
+                title={<h4>{item.title}</h4>}
+                description="Message here"
+              />
+            </List.Item>
+          )}
+        />
         <Input
           style={{
             width: "1040px"

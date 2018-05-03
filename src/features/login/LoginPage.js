@@ -24,7 +24,9 @@ const LoginPage = props => (
       backgroundImage: `url(${Background})`,
       backgroundSize: "cover",
       overflow: "hidden",
-      textAlign: "center"
+      textAlign: "center",
+      width: "100%",
+      height: "100%"
     }}
   >
     <img

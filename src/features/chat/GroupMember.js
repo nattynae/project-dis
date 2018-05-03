@@ -46,7 +46,12 @@ export default props => (
           padding: "15px 0px 0px 15px"
         }}
       >
-        Group Members
+        <Icon
+          style={{
+            marginRight: 10
+          }}
+          type="team"
+        />Group Members
       </h3>
     </div>
 
@@ -57,7 +62,17 @@ export default props => (
       renderItem={item => (
         <List.Item>
           <List.Item.Meta
-            avatar={<Avatar size="small" icon="user" />}
+            avatar={
+              <Avatar
+                style={{
+                  backgroundColor: "#f56a00",
+                  verticalAlign: "middle"
+                }}
+                size="small"
+              >
+                Name
+              </Avatar>
+            }
             title={item.title}
           />
         </List.Item>

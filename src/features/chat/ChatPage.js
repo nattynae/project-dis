@@ -1,11 +1,13 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { searchType, searchReq } from "./reducer";
-import { Layout, Menu, Icon, Button } from "antd";
-import EachChat from "./EachChat";
+import { Layout, Menu, Icon, Button, Popover, Table } from "antd";
+
 import "./ChatPage.css";
-import GroupMember from "./GroupMember";
+
+import Background from "../login/stars.jpg";
+
 const { Header, Sider } = Layout;
 
 const enhance = connect(
@@ -16,91 +18,185 @@ const enhance = connect(
   { searchType, searchReq }
 );
 
-const ChatPage = props => (
-  <Layout>
-    <Header className="header">
-      <div
-        style={{
-          position: "fixed",
-          right: 20,
-          color: "white"
-        }}
-      >
-        <h2
+const columns = [
+  {
+    title: "Group Name",
+    dataIndex: "name"
+  }
+];
+
+const allGroup = [];
+for (let i = 0; i < 6; i++) {
+  allGroup.push({
+    key: i,
+    name: `Group ${i}`,
+    inGroup: true
+  });
+}
+
+const content = <div />;
+
+class ChatPage extends React.Component {
+  state = {
+    visible: false,
+    selectedRows: [],
+    currentGroup: allGroup,
+    groupName: "Group Name"
+  };
+  onSelectChange = selectedRows => {
+    console.log("selectedRowKeys changed: ", selectedRows);
+    this.setState({ selectedRows });
+  };
+
+  handleCurrentGroup = visible => {
+    //Do something else
+    this.setState({ visible });
+  };
+  handleVisibleChange = visible => {
+    this.setState({ visible });
+  };
+  render() {
+    const { selectedRows, currentGroup, groupName } = this.state;
+
+    const rowSelection = {
+      selectedRows,
+      onChange: this.onSelectChange,
+      hideDefaultSelections: true,
+      selections: [
+        {
+          key: "all-data",
+          text: "Select All Data",
+          onSelect: () => {
+            this.setState({
+              selectedRows: [...allGroup.keys()] // 0...45
+            });
+          }
+        }
+      ],
+      onSelection: this.onSelection
+    };
+
+    return (
+      <Layout>
+        <Header
           style={{
-            color: "white"
+            backgroundImage: `url(${Background})`,
+            backgroundSize: "cover",
+            overflow: "hidden",
+            textAlign: "center"
           }}
+          className="header"
         >
-          User
-          <Button
+          <div
             style={{
-              marginLeft: 20,
-              height: 25
+              position: "fixed",
+              right: 20,
+              color: "white"
             }}
-            ghost={true}
-            icon="poweroff"
           >
-            Log Out
-          </Button>
-        </h2>
-      </div>
-    </Header>
+            <h2
+              style={{
+                color: "white"
+              }}
+            >
+              User<Link to="/">
+                <Button
+                  style={{
+                    marginLeft: 20,
+                    height: 25
+                  }}
+                  ghost={true}
+                  icon="poweroff"
+                >
+                  Log Out
+                </Button>
+              </Link>
+            </h2>
+          </div>
+        </Header>
 
-    <Layout>
-      <Sider
-        style={{
-          theme: "light",
-          background: "#D3D3D3",
-          width: 200,
-          overflow: "auto",
-          height: "100vh",
-          position: "fixed",
-          left: 0
-        }}
-      >
-        <div
-          style={{
-            textAlign: "left",
-            background: "#D3D3D3",
-            color: "gray",
-            borderColor: "#D3D3D3",
-            height: "50px",
-            margin: "auto"
-          }}
-        >
-          <h3
+        <Layout>
+          <Sider
             style={{
-              padding: "15px 0px 0px 15px"
+              theme: "light",
+              background: "#e9ebee",
+              width: 200,
+              overflow: "auto",
+              height: "100vh",
+              position: "fixed",
+              left: 0
             }}
           >
-            <Icon type="aliwangwang-o" /> Chats
-          </h3>
-        </div>
+            <div
+              style={{
+                textAlign: "left",
+                background: "#D3D3D3",
+                color: "gray",
+                borderColor: "#D3D3D3",
+                height: "50px",
+                margin: "auto"
+              }}
+            >
+              <h3
+                style={{
+                  padding: "15px 0px 0px 15px"
+                }}
+              >
+                <Icon type="aliwangwang-o" /> Groups
+                <Popover
+                  content={
+                    <div>
+                      <Table
+                        rowSelection={rowSelection}
+                        columns={columns}
+                        dataSource={allGroup}
+                      />
+                      <Button
+                        type="primary"
+                        style={{ width: "100%" }}
+                        onClick={this.handleCurrentGroup}
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  }
+                  placement="rightTop"
+                  title="Group Management"
+                  trigger="click"
+                  visible={this.state.visible}
+                  onVisibleChange={this.handleVisibleChange}
+                >
+                  <Button
+                    type="inline"
+                    shape="circle"
+                    icon="edit"
+                    size="small"
+                    style={{ marginLeft: 60 }}
+                  />
+                </Popover>
+              </h3>
+            </div>
 
-        <Menu
-          theme="light"
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          style={{
-            height: "100%"
-          }}
-        >
-          <Menu.Item className="menu-item" key="1">
-            nav 1
-          </Menu.Item>
-          <Menu.Item className="menu-item" key="2">
-            nav 2
-          </Menu.Item>
-          <Menu.Item className="menu-item" key="3">
-            nav 3
-          </Menu.Item>
-        </Menu>
-      </Sider>
-      <EachChat />
-
-      <GroupMember />
-    </Layout>
-  </Layout>
-);
+            <Menu
+              theme="light"
+              mode="inline"
+              style={{
+                height: "100%"
+              }}
+              onSelect={e => this.setState({ groupName: e.item })}
+            >
+              {currentGroup.map(e => (
+                <Menu.Item className="menu-item" key={e.key}>
+                  <Link to={"/chat/" + e.key} />
+                  {e.name}
+                </Menu.Item>
+              ))}
+            </Menu>
+          </Sider>
+        </Layout>
+      </Layout>
+    );
+  }
+}
 
 export default enhance(ChatPage);

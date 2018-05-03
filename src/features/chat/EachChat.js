@@ -35,6 +35,18 @@ export default props => (
         >
           {props.groupName}
         </h3>
+        <Button
+          icon="to-top"
+          style={{
+            marginLeft: -461,
+            marginTop: 3,
+            width: "72%",
+            position: "fixed",
+            marginRight: 200
+          }}
+        >
+          Load more ..
+        </Button>
       </div>
 
       <div

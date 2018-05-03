@@ -9,7 +9,7 @@ app.use(bodyParser.json())
 const config = {
     host: 'localhost',
     user: 'root',
-    password: 'Spiperafk1', /* your db password here*/
+    password: 'ching', /* your db password here*/
     database: 'chat_data'
 };
 const db = new database(config);

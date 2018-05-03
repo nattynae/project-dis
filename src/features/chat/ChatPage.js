@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { getUserGroup,resetState } from "./reducer";
-import { Layout, Menu, Icon, Button, Popover, Table } from "antd";
+import { getUserGroup, resetState } from "./reducer";
+import { Layout, Menu, Icon, Button, Popover, Table, Input } from "antd";
 import { bindActionCreators } from "redux";
 
 import "./ChatPage.css";
@@ -13,16 +13,16 @@ const { Header, Sider } = Layout;
 
 const mapStateToProps = state => {
   return {
-    userInformation : state.login.userInformation,
-    queryGroup : state.chat.queryGroup,
-    userGroup : state.chat.userGroup
+    userInformation: state.login.userInformation,
+    queryGroup: state.chat.queryGroup,
+    userGroup: state.chat.userGroup
   };
 };
 
 const mapDispatchToProps = (dispatch, props) => {
   return {
     getUserGroup: bindActionCreators(getUserGroup, dispatch),
-    resetState : bindActionCreators(resetState,dispatch)
+    resetState: bindActionCreators(resetState, dispatch)
   };
 };
 
@@ -48,7 +48,7 @@ class ChatPage extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;
-  };
+  }
 
   state = {
     visible: false,
@@ -69,7 +69,7 @@ class ChatPage extends React.Component {
     this.setState({ visible });
   };
   render() {
-    if(this.props.queryGroup){
+    if (this.props.queryGroup) {
       this.props.getUserGroup(this.props.userInformation.username);
     }
     const { selectedRows, currentGroup, groupName } = this.state;
@@ -115,9 +115,10 @@ class ChatPage extends React.Component {
                 color: "white"
               }}
             >
-              {this.props.userInformation.username}<Link to="/">
+              {this.props.userInformation.username}
+              <Link to="/">
                 <Button
-                  onClick = {() => this.props.resetState()}
+                  onClick={() => this.props.resetState()}
                   style={{
                     marginLeft: 20,
                     height: 25
@@ -163,11 +164,27 @@ class ChatPage extends React.Component {
                 <Popover
                   content={
                     <div>
+                      <Input
+                        placeholder="Create New Group"
+                        addonAfter={
+                          <Button
+                            type="primary"
+                            icon="usergroup-add"
+                            style={{
+                              marginTop: -25,
+                              marginBottom: -25,
+                              marginLeft: -11,
+                              marginRight: -11
+                            }}
+                          />
+                        }
+                      />
                       <Table
                         rowSelection={rowSelection}
                         columns={columns}
                         dataSource={allGroup}
                       />
+
                       <Button
                         type="primary"
                         style={{ width: "100%" }}
@@ -186,7 +203,7 @@ class ChatPage extends React.Component {
                   <Button
                     type="inline"
                     shape="circle"
-                    icon="edit"
+                    icon="setting"
                     size="small"
                     style={{ marginLeft: 60 }}
                   />

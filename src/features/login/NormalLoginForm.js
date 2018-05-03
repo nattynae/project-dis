@@ -1,8 +1,12 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
-import { Form, Icon, Input, Button, Checkbox } from "antd";
+import { Form, Icon, Input, Button, Checkbox, message } from "antd";
 import { login } from "./reducer";
 const FormItem = Form.Item;
+
+const error = () => {
+  message.error("Username or Password is incorrect!");
+};
 
 class NormalLoginForm extends React.Component {
   handleSubmit = e => {
@@ -14,7 +18,7 @@ class NormalLoginForm extends React.Component {
     });
   };
   render() {
-    const { setField,login,clearField } = this.props;
+    const { setField, login, clearField } = this.props;
     console.log(this.props);
     const { getFieldDecorator } = this.props.form;
     return (
@@ -27,7 +31,7 @@ class NormalLoginForm extends React.Component {
             <Input
               prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
               placeholder="Username"
-              onChange = { e => setField('username',e.target.value)}
+              onChange={e => setField("username", e.target.value)}
             />
           )}
         </FormItem>
@@ -39,7 +43,7 @@ class NormalLoginForm extends React.Component {
               prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
               type="password"
               placeholder="Password"
-              onChange = {e => setField('password',e.target.value)}
+              onChange={e => setField("password", e.target.value)}
             />
           )}
         </FormItem>
@@ -48,12 +52,21 @@ class NormalLoginForm extends React.Component {
             type="primary"
             htmlType="submit"
             className="login-form-button"
-            onClick = {() => login()}
+            onClick={() => login()}
             style={{ marginRight: 20 }}
           >
             Log in
           </Button>
-          Or <a href="#" onClick = {() => {clearField();setField('loginPage',false)}}>register now! </a>
+          Or{" "}
+          <a
+            href="#"
+            onClick={() => {
+              clearField();
+              setField("loginPage", false);
+            }}
+          >
+            register now!{" "}
+          </a>
         </FormItem>
       </Form>
     );

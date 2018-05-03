@@ -1,57 +1,103 @@
 import axios from "axios";
 
-const SET_FEILD = "SET_FEILD";
-const SEARCH_REQ = "SEARCH_REQ";
-const SEARCH_REQ_PENDING = "SEARCH_REQ_PENDING";
-const SEARCH_REQ_FULFILLED = "SEARCH_REQ_FULFILLED";
+const SET_FIELD = "SET_FIELD";
+const LOGIN = "LOGIN";
+const LOGIN_FULFILLED = "LOGIN_FULFILLED";
+const REGIST = "REGIST";
+const REGIST_FULFILLED = "REGIST_FULFILLED";
+const CLEAR_FIELD = "CLEAR_FIELD";
 
 const initialState = {
-  loginPage: false
+  loginPage: true,
+  username : "",
+  password : "",
+  usernameReg : "",
+  passwordReg : "",
+  registSuccess : '0',
+  loginSuccess : false,
+  userInformation : {
+    username : "",
+    color : ""
+  }
 };
 
-let img = [];
-
 export default (state = initialState, action) => {
+  console.log(action);
   switch (action.type) {
-    case SET_FEILD:
+    case CLEAR_FIELD:
       return {
+        ...initialState
+      }
+    case SET_FIELD:
+      return {
+        ...state,
         [action.key]: action.value
       };
-    case SEARCH_REQ:
-      return {
-        ...state
-      };
-    case SEARCH_REQ_PENDING:
+    case LOGIN_FULFILLED:
+      if(action.payload.valid)
+        return {
+          ...state,
+          loginSuccess: true,
+          userInformation: action.payload.userInformation,
+          username : "",
+          password : ""
+        };
+      else
+        return{
+          ...state,
+          loginSuccess : false
+        }
+      
+    case REGIST_FULFILLED:
       return {
         ...state,
-        loading: true
-      };
-    case SEARCH_REQ_FULFILLED:
-      return {
-        ...state,
-        loading: false,
-        result: action.payload.map(e => e.urls.small)
-      };
+        registSuccess : action.payload,
+        usernameReg : "",
+        passwordReg : ""
+      }
     default:
       return state;
   }
 };
 
-export const setFeild = (key, value) => ({
-  type: SET_FEILD,
+export const setField = (key, value) => ({
+  type: SET_FIELD,
   key,
   value
 });
 
-export const searchReq = text => ({
-  type: SEARCH_REQ,
-  text,
+export const regist = (username,password) => ({
+  type : REGIST,
+  payload : axios
+    .post("http://localhost:8000/regist", {
+        username: username,
+        password : password
+      })
+      .then(function(response) {
+      return response.data.valid;
+      })
+})
+
+export const login = (username,password) => ({
+  type: LOGIN,
   payload: axios
-    .get(
-      `https://api.unsplash.com/search/photos/?client_id=c668e84626863e64972bfae0525132f0443d6bb266800c758fa0d54735994446&page=1&query=${text}`
-    )
+    .post("http://localhost:8000/login", {
+      username: username,
+      password : password
+    })
     .then(function(response) {
-      console.log(response);
-      return response.data.results;
+      if(response.data.valid){
+        return {
+          valid : true,
+          userInformation : response.data.userInformation
+        }
+      }
+      return {
+        valid :  false,
+      }
     })
 });
+
+export const clearField = () =>({
+  type: CLEAR_FIELD
+})

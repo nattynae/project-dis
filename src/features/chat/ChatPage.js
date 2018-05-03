@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { searchType, searchReq } from "./reducer";
+import { getUserGroup,resetState } from "./reducer";
 import { Layout, Menu, Icon, Button, Popover, Table } from "antd";
+import { bindActionCreators } from "redux";
 
 import "./ChatPage.css";
 
@@ -10,13 +11,20 @@ import Background from "../login/stars.jpg";
 
 const { Header, Sider } = Layout;
 
-const enhance = connect(
-  state => ({
-    text: state.text,
-    result: state.result
-  }),
-  { searchType, searchReq }
-);
+const mapStateToProps = state => {
+  return {
+    userInformation : state.login.userInformation,
+    queryGroup : state.chat.queryGroup,
+    userGroup : state.chat.userGroup
+  };
+};
+
+const mapDispatchToProps = (dispatch, props) => {
+  return {
+    getUserGroup: bindActionCreators(getUserGroup, dispatch),
+    resetState : bindActionCreators(resetState,dispatch)
+  };
+};
 
 const columns = [
   {
@@ -37,6 +45,11 @@ for (let i = 0; i < 6; i++) {
 const content = <div />;
 
 class ChatPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.props = props;
+  };
+
   state = {
     visible: false,
     selectedRows: [],
@@ -56,6 +69,9 @@ class ChatPage extends React.Component {
     this.setState({ visible });
   };
   render() {
+    if(this.props.queryGroup){
+      this.props.getUserGroup(this.props.userInformation.username);
+    }
     const { selectedRows, currentGroup, groupName } = this.state;
 
     const rowSelection = {
@@ -99,8 +115,9 @@ class ChatPage extends React.Component {
                 color: "white"
               }}
             >
-              User<Link to="/">
+              {this.props.userInformation.username}<Link to="/">
                 <Button
+                  onClick = {() => this.props.resetState()}
                   style={{
                     marginLeft: 20,
                     height: 25
@@ -185,10 +202,10 @@ class ChatPage extends React.Component {
               }}
               onSelect={e => this.setState({ groupName: e.item })}
             >
-              {currentGroup.map(e => (
+              {this.props.userGroup.map(e => (
                 <Menu.Item className="menu-item" key={e.key}>
                   <Link to={"/chat/" + e.key} />
-                  {e.name}
+                  {e.groupName}
                 </Menu.Item>
               ))}
             </Menu>
@@ -199,4 +216,4 @@ class ChatPage extends React.Component {
   }
 }
 
-export default enhance(ChatPage);
+export default connect(mapStateToProps, mapDispatchToProps)(ChatPage);

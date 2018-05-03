@@ -1,59 +1,64 @@
 import axios from "axios";
 
-const SEARCH_TYPE = "SEARCH_TYPE";
-const SEARCH_REQ = "SEARCH_REQ";
-const SEARCH_REQ_PENDING = "SEARCH_REQ_PENDING";
-const SEARCH_REQ_FULFILLED = "SEARCH_REQ_FULFILLED";
+const GET_USER_GROUP = "GET_USER_GROUP";
+const GET_USER_GROUP_FULFILLED = "GET_USER_GROUP_FULFILLED";
+const RESET_STATE = "RESET_STATE";
+const SET_FIELD = "SET_FIELD";
 
 const initialState = {
-  text: "",
-  result: [],
-  loading: false
+  userGroup : [{groupName : ""}],
+  queryGroup : true,
 };
-
-let img = [];
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case SEARCH_TYPE:
+    case RESET_STATE:
+      return {
+        ...initialState
+      }
+    case SET_FIELD:
+      return{
+        ...state,
+        [action.key] : action.value
+      }
+    case GET_USER_GROUP_FULFILLED:
+    if(action.payload.valid)
       return {
         ...state,
-        text: action.text
+        queryGroup : false,
+        userGroup : action.payload.groupList
+
       };
-    case SEARCH_REQ:
-      return {
+    else{
+      return{
         ...state
-      };
-    case SEARCH_REQ_PENDING:
-      return {
-        ...state,
-        loading: true
-      };
-    case SEARCH_REQ_FULFILLED:
-      return {
-        ...state,
-        loading: false,
-        result: action.payload.map(e => e.urls.small)
-      };
+      }
+    }
     default:
       return state;
   }
 };
 
-export const searchType = text => ({
-  type: SEARCH_TYPE,
-  text
+
+export const resetState = () => ({
+  type : RESET_STATE
+})
+
+
+export const getUserGroup = (username) => ({
+  type: GET_USER_GROUP,
+  payload: axios
+  .post("http://localhost:8000/getUserGroup", {
+    username: username,
+  })
+  .then(function(response) {
+    console.log(response.data);
+    return response.data;
+  })
 });
 
-export const searchReq = text => ({
-  type: SEARCH_REQ,
-  text,
-  payload: axios
-    .get(
-      `https://api.unsplash.com/search/photos/?client_id=c668e84626863e64972bfae0525132f0443d6bb266800c758fa0d54735994446&page=1&query=${text}`
-    )
-    .then(function(response) {
-      console.log(response);
-      return response.data.results;
-    })
-});
+export const setField = (key,value) => ({
+  type : SET_FIELD,
+  key : key,
+  value : value
+})

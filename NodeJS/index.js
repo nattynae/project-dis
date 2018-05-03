@@ -25,12 +25,34 @@ app.post('/regist', (req,res) => {
     let pw = req.body.password;
     regist(user,pw).then(results => {res.send(results)})
 })
-/*
-const results = await db.query('SELECT U.password, U.userId, G.groupName, M.text \
-                                    FROM user S NATURAL JOIN groupmember GM \
-                                    NATURAL JOIN group G\
-                                    NATURAL JOIN message M\
-                                    where userId= ?', username)*/ 
+
+app.post('/getUserGroup' , (req,res) => {
+    let username = req.body.username;
+    console.log(username);
+    getUserGroup(username).then(results => {res.send(results)})
+})
+
+app.post('/getAllGroup', (req,res) =>{
+    
+})
+
+
+async function getUserGroup(username){
+    try{
+        const results = await db.query('SELECT G.groupName, M.text, M.timeStamp \
+                                    FROM groupmember GM NATURAL JOIN chat_data.`group` G \
+                                    NATURAL JOIN message M \
+                                    where userId= ?', username);
+        return {
+            valid : true,
+            groupList : results
+        }
+    }catch(e){
+        return {valid : false}
+        console.log("from getUserGroup " + e);
+    }
+}
+
 async function regist(username,pw){
     try {
         await db.query('INSERT INTO user (userId, password, color) \
